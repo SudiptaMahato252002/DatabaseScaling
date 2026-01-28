@@ -1,0 +1,39 @@
+services:
+  shard0:
+    image: postgres:15-alpine
+    container_name: shard0
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: myDb0
+    volumes:
+      - shard0_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+    networks:
+      - sharded_network
+    
+  shard1:
+    image: postgres:15-alpine
+    container_name: shard1
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: myDb1
+    volumes:
+      - shard1_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+    networks:
+      - sharded_network
+
+volumes:
+  shard0_data:
+  shard1_data:
+
+
+networks:
+  sharded_network:
+    driver: bridge
