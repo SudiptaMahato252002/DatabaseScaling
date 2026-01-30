@@ -22,19 +22,37 @@ public class BlogController
 {
     private final BlogService blogService;
 
-    @PostMapping
+    @PostMapping("/create-blog")
     public ResponseEntity<String> createBlog(@RequestBody BlogRequestDTO dto) 
     {
-        String blogId = blogService.createBlog(dto);
-        return ResponseEntity
+        try 
+        {
+            String blogId = blogService.createBlog(dto);
+            return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(blogId);
+        } 
+        catch (Exception e) 
+        {
+            System.err.println("Error: " + e.getMessage());
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
+        }
+        
     }
 
-    @GetMapping("/{blogId}")
-    public ResponseEntity<Blog> getBlog(@PathVariable String blogId) 
+    @GetMapping("/{blogId}/{userId}")
+    public ResponseEntity<?> getBlog(@PathVariable String blogId,@PathVariable String userId) 
     {
-        Blog blog = blogService.getBlog(blogId);
-        return ResponseEntity.ok(blog);
+        try 
+        {
+            Blog blog = blogService.getBlog(blogId,userId);
+            return ResponseEntity.ok(blog);    
+        } 
+        catch (Exception e) 
+        {
+            System.err.println("Blog not found: " + e.getMessage());
+            return ResponseEntity.status(404).body("Blog not found");
+        }
+        
     }
 }

@@ -38,9 +38,9 @@ public class BlogService
         return blog.getId();
     }
 
-    public Blog getBlog(String blogId)
+    public Blog getBlog(String blogId,String userId)
     {
-        Blog blog=blogRepo.findBlogById(blogId);
+        Blog blog=blogRepo.findBlogById(blogId,userId);
         if(blog==null)
         {
             throw new IllegalArgumentException("No blog with that id exists");
